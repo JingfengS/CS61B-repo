@@ -5,7 +5,7 @@ public class NBody{
 		double T = Double.parseDouble(args[0]);
 		double dt = Double.parseDouble(args[1]);
 		String fileName = args[2];
-		Planet[] planets = readplanets(fileName);
+		Planet[] planets = readPlanets(fileName);
 		double radius = readRadius(fileName);
 
 		StdDraw.setScale(-1 * radius, radius);
@@ -56,7 +56,7 @@ public class NBody{
 	/**
 	 * Return an array of all the planets in the universe
 	 */
-	public static Planet[] readplanets(String fileName){
+	public static Planet[] readPlanets(String fileName){
 		In in = new In(fileName);
 
 		int totalplanets = in.readInt();
