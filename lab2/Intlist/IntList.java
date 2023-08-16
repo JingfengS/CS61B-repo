@@ -29,7 +29,7 @@ public class IntList {
      * A List with null rest, and first = 0.
      */
     public IntList() {
-    /* NOTE: public IntList () { }  would also work. */
+        /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
 
@@ -85,8 +85,8 @@ public class IntList {
             A = B;
             return A;
         } else if (A.rest == null) {
-           A.rest = B;
-           return A;
+            A.rest = B;
+            return A;
         } else {
             return new IntList(A.first, dcatenate(A.rest, B));
         }
@@ -104,14 +104,90 @@ public class IntList {
         }
     }
 
+    public IntList getLastNode() {
+        if (this.rest == null) {
+            return this;
+        }
+        return this.rest.getLastNode();
+    }
+
+    public static IntList reverseNondestructive(IntList L) {
+        int firstValue = L.first;
+        IntList p = new IntList(firstValue, null);
+        L = L.rest;
+        if (L == null) {
+            return p;
+        }
+        IntList temp = reverseNondestructive(L);
+        temp.getLastNode().rest = p;
+        return temp;
+    }
+
+    public IntList getLastSecondNode() {
+        if (this.rest == null) {
+            throw new IllegalArgumentException("The List should be at least 2 node long!");
+        }
+        if (this.rest.rest == null) {
+            return this;
+        }
+        return this.rest.getLastSecondNode();
+    }
 
 
+    public static IntList reverseDestructive(IntList L) {
+        if (L.rest == null) {
+            return L;
+        }
+        IntList value = L.getLastNode();
+        IntList Node = L.getLastSecondNode();
+        Node.rest = null;
+        value.rest = Node;
+        IntList.reverseDestructive(L);
+        return value;
+    }
+
+    public static void evenOdd(IntList lst) {
+        if (lst.rest == null || lst.rest.rest == null) {
+            return;
+        }
+        IntList secondNode = lst.rest;
+        IntList oddNode = lst.rest;
+        while (lst.rest != null && oddNode.rest != null) {
+            lst.rest = lst.rest.rest;
+            oddNode.rest = oddNode.rest.rest;
+            lst = lst.rest;
+            oddNode = oddNode.rest;
+        }
+        lst.rest = secondNode;
+    }
+
+    public void skippify() {
+        IntList p = this;
+        int n = 1;
+        while (p != null) {
+            IntList next = p;
+            for (int i = 0; i <= n; i++) {
+                if (p == null) {
+                    break;
+                }
+                p = p.rest;
+            }
+            next.rest = p;
+            n++;
+        }
+    }
 
 
-
-
-
-
+    public static IntList shiftListDestructive(IntList L) {
+        if (L.rest == null) {
+            return L;
+        }
+        IntList lastNode = L.getLastNode();
+        IntList valueReturn =  L.rest;
+        L.rest = null;
+        lastNode.rest = L;
+        return valueReturn;
+    }
 
 
 
