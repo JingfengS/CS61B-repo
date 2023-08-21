@@ -22,6 +22,7 @@ public class LinkedListDeque<Item> {
     }
     private ItemNode sentinel;
     private int size;
+
     public LinkedListDeque() {
        size = 0;
        sentinel = new ItemNode(null, null, null);
