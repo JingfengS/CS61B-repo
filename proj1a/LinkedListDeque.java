@@ -1,4 +1,5 @@
-/** Invariants:
+/**
+ * Invariants:
  * prev: the node before
  * item: the information stored in the node
  * next: the node after
@@ -13,21 +14,23 @@ public class LinkedListDeque<Item> {
         ItemNode prev;
         Item item;
         ItemNode next;
+
         private ItemNode(ItemNode pr, Item it, ItemNode ne) {
-           prev = pr;
-           item = it;
-           next = ne;
+            prev = pr;
+            item = it;
+            next = ne;
         }
 
     }
+
     private ItemNode sentinel;
     private int size;
 
     public LinkedListDeque() {
-       size = 0;
-       sentinel = new ItemNode(null, null, null);
-       sentinel.next = sentinel;
-       sentinel.prev = sentinel;
+        size = 0;
+        sentinel = new ItemNode(null, null, null);
+        sentinel.next = sentinel;
+        sentinel.prev = sentinel;
     }
 
     public LinkedListDeque(Item x) {
@@ -47,6 +50,7 @@ public class LinkedListDeque<Item> {
     public int size() {
         return size;
     }
+
     public void addFirst(Item t) {
         ItemNode secondNode = sentinel.next;
         ItemNode firstNode = new ItemNode(sentinel, t, secondNode);
@@ -71,6 +75,7 @@ public class LinkedListDeque<Item> {
         secondNode.prev = sentinel;
         size -= 1;
     }
+
     public void removeLast() {
         if (this.size() == 0) {
             throw new IllegalArgumentException("The deque size is already 0!");
@@ -87,8 +92,8 @@ public class LinkedListDeque<Item> {
         }
         ItemNode p = sentinel.next;
         while (index != 0) {
-           p = p.next;
-           index -= 1;
+            p = p.next;
+            index -= 1;
         }
         return p.item;
     }
@@ -101,14 +106,15 @@ public class LinkedListDeque<Item> {
         }
     }
 
+
     private Item getRecursive(int index, ItemNode D) {
-       if (index == 0) {
-           return D.next.item;
-       }
-       return getRecursive(index-1, D.next);
+        if (index == 0) {
+            return D.next.item;
+        }
+        return getRecursive(index - 1, D.next);
     }
 
     public Item getRecursive(int index) {
-       return getRecursive(index, this.sentinel);
+        return getRecursive(index, this.sentinel);
     }
 }

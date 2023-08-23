@@ -22,7 +22,7 @@ public class ArrayDequeTest {
             A.addLast(1);
         }
         for (int i = 0; i < 10; i++) {
-           A.addFirst(8);
+            A.addFirst(8);
         }
         assertThat(A.size()).isEqualTo(13);
         for (int i = 0; i < 3; i++) {
