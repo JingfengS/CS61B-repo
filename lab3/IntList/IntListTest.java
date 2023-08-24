@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
 import static com.google.common.truth.Truth.assertThat;
 
 public class IntListTest {
@@ -67,9 +68,11 @@ public class IntListTest {
         assertEquals(IntList.of(1, 2, 3), A);
     }
 
-    /** If you're running this from the command line, you'll need
-      * to add a main method. See ArithmeticTest.java for an
-      * example. */
+    /**
+     * If you're running this from the command line, you'll need
+     * to add a main method. See ArithmeticTest.java for an
+     * example.
+     */
     @Test
     public void testReverse() {
         IntList A = IntList.of(1, 2, 3, 4, 5);
@@ -80,4 +83,13 @@ public class IntListTest {
         assertThat(IntList.reverse(B)).isEqualTo(null);
     }
 
+    @Test
+    public void testPartition() {
+        IntList A = IntList.of(6, 5, 4, 3, 2, 1);
+        IntList[] APartitioned = IntList.partition(A, 2);
+        assertThat(APartitioned.length).isEqualTo(2);
+        assertThat(APartitioned[0]).isEqualTo(IntList.of(6, 4, 2));
+        assertThat(A).isNotEqualTo(IntList.of(6, 5, 4, 3, 2, 1));
+        assertThat(APartitioned[1]).isEqualTo(IntList.of(5, 3, 1));
+    }
 }

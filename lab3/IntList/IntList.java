@@ -327,5 +327,20 @@ public class IntList {
         return p;
     }
 
+    public static IntList[] partition(IntList lst, int k) {
+        IntList[] array = new IntList[k];
+        int index = 0;
+        IntList L = IntList.reverse(lst);
+        while (L != null) {
+            IntList rest = L.rest;
+            L.rest = array[k - index - 1];
+            array[k - index - 1] = L;
+            L = rest;
+            index += 1;
+            index = index % k;
+        }
+        return array;
+    }
+
 }
 
