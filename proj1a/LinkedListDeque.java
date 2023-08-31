@@ -66,24 +66,28 @@ public class LinkedListDeque<Item> {
         size += 1;
     }
 
-    public void removeFirst() {
+    public Item removeFirst() {
         if (this.size() == 0) {
-            throw new IllegalArgumentException("The deque size is already 0!");
+            return null;
         }
+        Item returnValue = sentinel.next.item;
         ItemNode secondNode = sentinel.next.next;
         sentinel.next = secondNode;
         secondNode.prev = sentinel;
         size -= 1;
+        return returnValue;
     }
 
-    public void removeLast() {
+    public Item removeLast() {
         if (this.size() == 0) {
-            throw new IllegalArgumentException("The deque size is already 0!");
+            return null;
         }
         ItemNode lastNode = sentinel.prev;
+        Item returnValue = lastNode.item;
         lastNode.prev.next = sentinel;
         sentinel.prev = sentinel.prev.prev;
         size -= 1;
+        return returnValue;
     }
 
     public Item get(int index) {

@@ -40,8 +40,9 @@ public class LinkedListDequeMyTest {
         LinkedListDeque<Integer> B = new LinkedListDeque<>();
         A.addLast(2);
         B.addLast(10);
-        A.removeFirst();
-        B.removeFirst();
+        assertThat(A.removeFirst()).isEqualTo(1);
+        assertThat(A.removeFirst()).isEqualTo(2);
+        assertThat(A.removeFirst()).isNull();
     }
 
     @Test
@@ -49,9 +50,10 @@ public class LinkedListDequeMyTest {
         LinkedListDeque<Integer> A = new LinkedListDeque<>(1);
         LinkedListDeque<Integer> B = new LinkedListDeque<>();
         A.addLast(2);
-        B.addLast(10);
-        A.removeLast();
-        B.removeLast();
+        A.addLast(10);
+        assertThat(A.removeLast()).isEqualTo(10);
+        assertThat(A.removeLast()).isEqualTo(2);
+        assertThat(B.removeLast()).isNull();
     }
 
     @Test
