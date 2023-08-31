@@ -5,9 +5,9 @@ public class ArrayDeque<T> {
     private int nextFirst;
 
     public ArrayDeque() {
-        int size = 0;
-        int nextLast = 0;
-        int nextFirst = items.length - 1;
+        size = 0;
+        nextLast = 0;
+        nextFirst = items.length - 1;
     }
 
     private int getNextFirst(int first, T[] items) {
@@ -41,7 +41,7 @@ public class ArrayDeque<T> {
             items = newItems;
             nextFirst = getNextFirst(0, items);
             nextLast = getNextLast(size - 1, items);
-        } else if ((double) size / items.length < 0.25 && items.length > 8) {
+        } else if ((double) size / items.length < 0.25 && items.length > 16) {
             T[] newItems = (T[]) new Object[items.length / 2];
             copyToArray(newItems);
             items = newItems;
@@ -68,24 +68,28 @@ public class ArrayDeque<T> {
         this.resize();
     }
 
-    public void removeLast() {
-        size -= 1;
-        if (size < 0) {
-            throw new IllegalArgumentException("The Array is already empty!");
+    public T removeLast() {
+        if (size == 0) {
+            return null;
         }
+        size -= 1;
         nextLast = getNextFirst(nextLast, items);
+        T returnValue = items[nextLast];
         items[nextLast] = null;
         this.resize();
+        return returnValue;
     }
 
-    public void removeFirst() {
-        size -= 1;
-        if (size < 0) {
-            throw new IllegalArgumentException("The Array is already empty!");
+    public T removeFirst() {
+        if (size == 0) {
+            return null;
         }
+        size -= 1;
         nextFirst = getNextLast(nextFirst, items);
+        T returnValue = items[nextFirst];
         items[nextFirst] = null;
         this.resize();
+        return returnValue;
     }
 
     private int getIndex(int i) {

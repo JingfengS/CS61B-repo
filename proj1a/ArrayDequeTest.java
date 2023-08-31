@@ -1,7 +1,6 @@
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
-import javax.security.auth.login.AccountExpiredException;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -67,18 +66,25 @@ public class ArrayDequeTest {
     @Test
     public void testGet() {
         ArrayDeque<Integer> A = new ArrayDeque<>();
+        assertThat(A.removeLast()).isNull();
+        assertThat(A.removeFirst()).isNull();
         for (int i = 0; i < 3; i++) {
             A.addLast(i);
         }
         for (int i = 0; i < 10; i++) {
             A.addFirst(i);
         }
-        for (int i = 0; i < 9; i++) {
+        assertThat(A.removeLast()).isEqualTo(2);
+        for (int i = 0; i < 8; i++) {
             A.removeLast();
+
         }
         assertThat(A.get(0)).isEqualTo(9);
         A.removeFirst();
         assertThat(A.get(2)).isEqualTo(6);
+        assertThat(A.removeFirst()).isEqualTo(8);
+        assertThat(A.removeLast()).isEqualTo(6);
+
     }
 
 }
