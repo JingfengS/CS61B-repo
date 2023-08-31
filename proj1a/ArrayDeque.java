@@ -104,4 +104,16 @@ public class ArrayDeque<T> {
         return items[getIndex(index)];
     }
 
+    public void printDeque() {
+        int itemIndex = getNextLast(nextFirst, items);
+        for (int i = 0; i < size; i += 1) {
+            System.out.print(items[itemIndex] + " ");
+            itemIndex = getNextLast(itemIndex, items);
+        }
+        System.out.println();
+    }
+
+   public boolean isEmpty() {
+        return size == 0;
+   }
 }

@@ -108,6 +108,7 @@ public class LinkedListDeque<Item> {
             System.out.print(p.item + " ");
             p = p.next;
         }
+        System.out.println();
     }
 
 

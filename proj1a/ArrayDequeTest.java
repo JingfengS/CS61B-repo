@@ -87,4 +87,24 @@ public class ArrayDequeTest {
 
     }
 
+
+    @Test
+    public void testPrintDeque() {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        ad.printDeque();
+        for (int i = 0; i < 10; i += 1) {
+            ad.addLast(i);
+        }
+        ad.printDeque();
+    }
+
+    @Test
+    public void testIsEmpty() {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        assertThat(ad.isEmpty()).isTrue();
+        ad.addLast(0);
+        assertThat(ad.isEmpty()).isFalse();
+        ad.removeLast();
+        assertThat(ad.isEmpty()).isTrue();
+    }
 }
