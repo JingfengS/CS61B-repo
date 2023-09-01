@@ -1,9 +1,7 @@
 import org.junit.Test;
 
-import javax.swing.text.StyleConstants;
 
 import static org.junit.Assert.*;
-import static com.google.common.truth.Truth.assertThat;
 
 public class TestPalindrome {
     // You must use this palindrome, and not instantiate
