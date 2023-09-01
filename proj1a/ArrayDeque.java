@@ -113,7 +113,7 @@ public class ArrayDeque<T> {
         System.out.println();
     }
 
-   public boolean isEmpty() {
+    public boolean isEmpty() {
         return size == 0;
-   }
+    }
 }

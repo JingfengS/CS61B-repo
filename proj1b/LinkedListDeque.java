@@ -9,7 +9,7 @@
  *
  * @param <Item>
  */
-public class LinkedListDeque<Item> implements Deque<Item>{
+public class LinkedListDeque<Item> implements Deque<Item> {
     private class ItemNode {
         ItemNode prev;
         Item item;
