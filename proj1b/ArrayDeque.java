@@ -1,4 +1,4 @@
-public class ArrayDeque<T> implements Deque<T>{
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items = (T[]) new Object[8];
     private int size;
     private int nextLast;
@@ -50,10 +50,12 @@ public class ArrayDeque<T> implements Deque<T>{
         }
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void addLast(T x) {
         size += 1;
         items[nextLast] = x;
@@ -61,6 +63,7 @@ public class ArrayDeque<T> implements Deque<T>{
         this.resize();
     }
 
+    @Override
     public void addFirst(T x) {
         size += 1;
         items[nextFirst] = x;
@@ -68,6 +71,7 @@ public class ArrayDeque<T> implements Deque<T>{
         this.resize();
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -80,6 +84,7 @@ public class ArrayDeque<T> implements Deque<T>{
         return returnValue;
     }
 
+    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -100,10 +105,12 @@ public class ArrayDeque<T> implements Deque<T>{
         return index;
     }
 
+    @Override
     public T get(int index) {
         return items[getIndex(index)];
     }
 
+    @Override
     public void printDeque() {
         int itemIndex = getNextLast(nextFirst, items);
         for (int i = 0; i < size; i += 1) {
@@ -113,7 +120,8 @@ public class ArrayDeque<T> implements Deque<T>{
         System.out.println();
     }
 
-   public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
         return size == 0;
-   }
+    }
 }

@@ -40,6 +40,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         sentinel.prev = sentinel.next;
     }
 
+    @Override
     public boolean isEmpty() {
         if (size == 0) {
             return true;
@@ -47,10 +48,12 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return false;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void addFirst(Item t) {
         ItemNode secondNode = sentinel.next;
         ItemNode firstNode = new ItemNode(sentinel, t, secondNode);
@@ -59,6 +62,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         size += 1;
     }
 
+    @Override
     public void addLast(Item t) {
         ItemNode addLastNode = new ItemNode(sentinel.prev, t, sentinel);
         sentinel.prev.next = addLastNode;
@@ -66,6 +70,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         size += 1;
     }
 
+    @Override
     public Item removeFirst() {
         if (this.size() == 0) {
             return null;
@@ -78,6 +83,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return returnValue;
     }
 
+    @Override
     public Item removeLast() {
         if (this.size() == 0) {
             return null;
@@ -90,6 +96,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return returnValue;
     }
 
+    @Override
     public Item get(int index) {
         if (index < 0) {
             throw new IllegalArgumentException("index cannot be negative!");
@@ -102,6 +109,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return p.item;
     }
 
+    @Override
     public void printDeque() {
         ItemNode p = sentinel.next;
         while (p.item != null) {
