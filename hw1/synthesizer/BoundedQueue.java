@@ -21,19 +21,19 @@ public interface BoundedQueue<T> {
      * delete the front item and return the item from front
      * @return item from the front
      */
-    T dequeue();
+    public T dequeue();
 
     /**
-     * return (but not delete item) from the front
+     * return (but not delete item) the item from the front
      * @return
      */
-    T peek();
+    public T peek();
 
     /**
      * @return true if the buffer is empty
      *         false otherwise
      */
-    default boolean isEmpty() {
+    default public boolean isEmpty() {
         return fillCount() == 0;
     }
 
@@ -41,7 +41,7 @@ public interface BoundedQueue<T> {
      * @return true if the buffer is full
      *         false otherwise
      */
-    default boolean isFull() {
+    default public boolean isFull() {
         return fillCount() == capacity();
     }
 }
