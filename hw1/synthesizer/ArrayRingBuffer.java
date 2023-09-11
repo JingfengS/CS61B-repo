@@ -1,3 +1,4 @@
+package synthesizer;
 // TODO: Make sure to make this class a part of the synthesizer package
 // package <package name>;
 import java.util.Iterator;
@@ -38,7 +39,8 @@ public class ArrayRingBuffer<T>  {
      * covered Monday.
      */
     public T dequeue() {
-        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
+        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
+        return null;
     }
 
     /**
@@ -46,6 +48,7 @@ public class ArrayRingBuffer<T>  {
      */
     public T peek() {
         // TODO: Return the first item. None of your instance variables should change.
+        return null;
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
