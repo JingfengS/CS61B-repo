@@ -30,6 +30,11 @@ public class TestArrayRingBuffer {
         } catch (Exception e) {
             assertThat(e.getMessage()).isEqualTo("Ring Buffer Underflow");
         }
+        try {
+            arb.peek();
+        } catch (Exception e) {
+            assertThat(e.getMessage()).isEqualTo("Buffer Empty");
+        }
         for (int i = 0; i < 10; i += 1) {
             arb.enqueue(10);
         }
