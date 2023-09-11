@@ -1,6 +1,5 @@
 package synthesizer;
 
-import org.checkerframework.checker.units.qual.A;
 
 //Make sure this class is public
 public class GuitarString {

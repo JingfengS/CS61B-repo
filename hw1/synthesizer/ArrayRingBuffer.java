@@ -91,5 +91,4 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         }
     }
 
-    // TODO: When you get to part 5, implement the needed code to support iteration.
 }
