@@ -1,9 +1,7 @@
 package synthesizer;
-// TODO: Make sure to make this class a part of the synthesizer package
-// package <package name>;
 
-//TODO: Make sure to make this class and all of its methods public
-//TODO: Make sure to make this class extend AbstractBoundedQueue<t>
+import java.util.Iterator;
+
 public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
@@ -36,7 +34,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public void enqueue(T x) {
         if (this.isFull()) {
-            throw new RuntimeException("The buffer is full!");
+            throw new RuntimeException("Ring Buffer Overflow");
         }
         fillCount += 1;
         rb[last] = x;
@@ -50,7 +48,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public T dequeue() {
         if (this.isEmpty()) {
-            throw new RuntimeException("The buffer is empty!");
+            throw new RuntimeException("Ring Buffer Underflow");
         }
         fillCount -= 1;
         T valueReturn = rb[first];
@@ -64,6 +62,33 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public T peek() {
         return rb[first];
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayRingBufferIterator();
+    }
+
+    private class ArrayRingBufferIterator implements Iterator<T> {
+        private int p;
+        public ArrayRingBufferIterator() {
+            p = first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return p != last;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new RuntimeException("Iterator Out of Bounds");
+            }
+            T valueReturn = rb[p];
+            p = getNext(p);
+            return valueReturn;
+        }
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.

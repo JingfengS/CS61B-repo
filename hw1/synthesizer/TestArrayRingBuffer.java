@@ -1,6 +1,9 @@
 package synthesizer;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
+
+import java.util.Iterator;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -25,7 +28,7 @@ public class TestArrayRingBuffer {
         try {
             arb.dequeue();
         } catch (Exception e) {
-            assertThat(e.getMessage()).isEqualTo("The buffer is empty!");
+            assertThat(e.getMessage()).isEqualTo("Ring Buffer Underflow");
         }
         for (int i = 0; i < 10; i += 1) {
             arb.enqueue(10);
@@ -33,7 +36,32 @@ public class TestArrayRingBuffer {
         try {
             arb.enqueue(100);
         } catch (Exception e) {
-            assertThat(e.getMessage()).isEqualTo("The buffer is full!");
+            assertThat(e.getMessage()).isEqualTo("Ring Buffer Overflow");
         }
+    }
+
+    @Test
+    public void testIterator() {
+        ArrayRingBuffer<Integer> arb = new ArrayRingBuffer<>(5);
+        for (int i = 0; i < 5; i += 1) {
+            arb.enqueue(5 - i);
+        }
+        Iterator<Integer> it = arb.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            assertThat(it.next()).isEqualTo(5 - 1);
+            i += 1;
+        }
+        try {
+            it.next();
+        } catch (Exception e) {
+            assertThat(e.getMessage()).isEqualTo("Iterator Out of Bounds");
+        }
+        int t = 0;
+        for (int j : arb) {
+            assertThat(j).isEqualTo(5 - t);
+            t += 1;
+        }
+
     }
 }
