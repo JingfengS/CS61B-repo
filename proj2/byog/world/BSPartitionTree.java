@@ -13,6 +13,7 @@ public class BSPartitionTree implements BSPTree {
 
     public BSPartitionTree(int WIDTH, int HEIGHT, long seed) {
         Random = new Random(seed);
+        StdRandom.setSeed(seed);
         root = new Node(0, WIDTH - 1, 0, HEIGHT - 1, null, null);
         leaves = new ArrayList<>();
     }

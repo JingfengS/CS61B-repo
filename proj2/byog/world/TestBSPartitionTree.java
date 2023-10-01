@@ -40,6 +40,8 @@ public class TestBSPartitionTree {
         bsp2.splitToEnd();
         BSPartitionTree bsp3 = new BSPartitionTree(100, 100, 300);
         bsp3.splitToEnd();
+        BSPartitionTree bsp4 = new BSPartitionTree(20, 20, 300);
+        bsp4.splitToEnd();
     }
 
     @Test
