@@ -8,7 +8,7 @@ public class Node implements TreeNode {
     private Node leftNode;
     private Node rightNode;
 
-    public Node(int le, int ri, int u, int dow, Node leftN, Node rightN) {
+    public Node(int le, int ri, int dow, int u, Node leftN, Node rightN) {
         left = le;
         right = ri;
         up = u;
@@ -38,12 +38,34 @@ public class Node implements TreeNode {
     }
 
     @Override
-    public TreeNode getLeftNode() {
+    public Node getLeftNode() {
         return leftNode;
     }
 
     @Override
-    public TreeNode getRightNode() {
+    public Node getRightNode() {
         return rightNode;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return leftNode == null && rightNode == null;
+    }
+
+    @Override
+    public void addNodes(TreeNode nodeLeft, TreeNode nodeRight) {
+        if (!isLeaf()) {
+            throw new RuntimeException("This node is not a leaf!");
+        }
+        leftNode = (Node) nodeLeft;
+        rightNode = (Node) nodeRight;
+    }
+
+
+    /**
+     * @return if this node is splitable
+     */
+    public boolean isSplitable() {
+        return getRight() - getLeft() >= 4 && getUp() - getDown() >= 4 && isLeaf();
     }
 }

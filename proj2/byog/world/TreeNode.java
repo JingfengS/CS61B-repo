@@ -35,5 +35,16 @@ public interface TreeNode {
      */
     public TreeNode getRightNode();
 
+    /**
+     * @return true if the node is a leaf
+     */
+    public boolean isLeaf();
+
+    /**
+     * Add the left node and right node so it won't be null
+     * This method is used for leaf
+     * @param nodeLeft
+     */
+    public void addNodes(TreeNode nodeLeft, TreeNode nodeRight);
 
 }

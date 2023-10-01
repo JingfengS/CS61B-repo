@@ -1,10 +1,12 @@
 package byog.world;
 
+import java.util.List;
+
 public interface BSPTree {
     /**
      * @return A list of Leaf Node that can not be partitioned
      */
-    public TreeNode[] getLeaf();
+    public List<TreeNode> getLeaves();
 
     /**
      * Split the given node into Nodes that can not be partitioned
