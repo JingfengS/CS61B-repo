@@ -7,12 +7,12 @@ import java.util.List;
 
 public class Hallways {
     private List<Room> rooms;
-    public Hallways(Rooms rs) {
-        rooms = rs.getRooms();
+    public Hallways(List<Room> rs) {
+        rooms = rs;
     }
 
-    public TETile[][] world(TETile[][] world) {
-        for (int i = 0; i < rooms.size(); i += 1) {
+    public TETile[][] drawHallways(TETile[][] world) {
+        for (int i = 0; i < rooms.size() - 1; i += 1) {
             Hallway hallway = new Hallway(rooms.get(i), rooms.get(i + 1));
             hallway.drawHallway(world);
         }
