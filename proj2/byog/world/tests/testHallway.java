@@ -3,6 +3,7 @@ package byog.world.tests;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import byog.world.Hallway;
 import byog.world.Node;
 import byog.world.Room;
 
@@ -26,8 +27,10 @@ public class testHallway {
         Node n2 = new Node(10, 20, 10, 20, null, null);
         Room r1 = new Room(n1);
         Room r2 = new Room(n2);
+        Hallway h = new Hallway(r2, r1);
         r1.drawRoom(world);
         r2.drawRoom(world);
+        h.drawHallway(world);
         ter.renderFrame(world);
     }
 }
