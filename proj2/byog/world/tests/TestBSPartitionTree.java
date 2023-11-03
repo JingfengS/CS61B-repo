@@ -1,5 +1,8 @@
-package byog.world;
+package byog.world.tests;
 
+import byog.world.BSPartitionTree;
+import byog.world.Node;
+import byog.world.TreeNode;
 import org.junit.Test;
 
 import java.util.List;
