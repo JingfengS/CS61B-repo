@@ -44,21 +44,21 @@ public class Room {
 
     public Room(TreeNode node) {
         // assign the right and left of the room
-        int pos1BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight());
-        int pos2BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight());
+        int pos1BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight() + 1);
+        int pos2BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight() + 1);
         while (Math.abs(pos2BetweenLeftAndRight - pos1BetweenLeftAndRight) < 3) {
-            pos1BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight());
-            pos2BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight());
+            pos1BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight() + 1);
+            pos2BetweenLeftAndRight = StdRandom.uniform(node.getLeft(), node.getRight() + 1);
         }
         left = Math.min(pos1BetweenLeftAndRight, pos2BetweenLeftAndRight);
         right = Math.max(pos1BetweenLeftAndRight, pos2BetweenLeftAndRight);
 
         // assign the top and bottom of the room
-        int pos1 = StdRandom.uniform(node.getDown(), node.getUp());
-        int pos2 = StdRandom.uniform(node.getDown(), node.getUp());
+        int pos1 = StdRandom.uniform(node.getDown(), node.getUp() + 1);
+        int pos2 = StdRandom.uniform(node.getDown(), node.getUp() + 1);
         while (Math.abs(pos1 - pos2) <  3) {
-            pos1 = StdRandom.uniform(node.getDown(), node.getUp());
-            pos2 = StdRandom.uniform(node.getDown(), node.getUp());
+            pos1 = StdRandom.uniform(node.getDown(), node.getUp() + 1);
+            pos2 = StdRandom.uniform(node.getDown(), node.getUp() + 1);
         }
         bottom = Math.min(pos1, pos2);
         top = Math.max(pos1, pos2);
