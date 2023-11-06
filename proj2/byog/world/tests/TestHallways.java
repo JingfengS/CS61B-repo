@@ -24,7 +24,7 @@ public class TestHallways {
                 world[i][j] = Tileset.NOTHING;
             }
         }
-        List<Room> rooms = new Rooms(WIDTH, HEIGHT, 100).getRooms();
+        List<Room> rooms = new Rooms(WIDTH, HEIGHT, 200).getRooms();
         for (Room room : rooms) {
             room.drawRoom(world);
         }

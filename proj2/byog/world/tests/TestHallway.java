@@ -7,9 +7,7 @@ import byog.world.Hallway;
 import byog.world.Node;
 import byog.world.Room;
 
-import javax.swing.tree.AbstractLayoutCache;
-
-public class testHallway {
+public class TestHallway {
     public static void main(String[] args) {
         final int WIDTH = 20;
         final int HEIGHT = 20;
