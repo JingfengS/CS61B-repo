@@ -2,17 +2,35 @@ package byog.Core;
 
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import byog.interactivity.Player;
+import byog.world.World;
+import edu.princeton.cs.introcs.StdDraw;
 
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    private boolean gameOver;
+    TETile[][] world;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+        gameOver = false;
+        TERenderer ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
+        world = new World(800, WIDTH, HEIGHT).getWorld();
+        Player p = new Player(world);
+        ter.renderFrame(world);
+        while (!gameOver) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char keyPress = StdDraw.nextKeyTyped();
+                p.action(keyPress);
+            }
+            ter.renderFrame(world);
+        }
     }
 
     /**

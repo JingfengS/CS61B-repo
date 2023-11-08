@@ -28,21 +28,21 @@ public class World {
         }
         Hallways hs = new Hallways(rooms);
         hs.drawHallways(world);
-        int DoorX = StdRandom.uniform(WIDTH);
-        int DoorY = StdRandom.uniform(HEIGHT);
+        int DoorX = StdRandom.uniform(1, WIDTH - 1);
+        int DoorY = StdRandom.uniform(1, HEIGHT - 1);
         while (!wallNextToFloor(DoorX, DoorY, world)) {
-            DoorX = StdRandom.uniform(WIDTH);
-            DoorY = StdRandom.uniform(HEIGHT);
+            DoorX = StdRandom.uniform(1, WIDTH - 1);
+            DoorY = StdRandom.uniform(1, HEIGHT - 1);
         }
         world[DoorX][DoorY] = Tileset.LOCKED_DOOR;
     }
 
     private static boolean wallNextToFloor(int x, int y, TETile[][] world) {
-        return  (world[x][y].equals(Tileset.WALL)) ||
-                (world[x][y + 1].equals(Tileset.FLOOR)) ||
+        return  (world[x][y].equals(Tileset.WALL)) &&
+                ((world[x][y + 1].equals(Tileset.FLOOR)) ||
                 (world[x][y-1].equals(Tileset.FLOOR)) ||
                 (world[x-1][y].equals(Tileset.FLOOR)) ||
-                (world[x+1][y].equals(Tileset.FLOOR));
+                (world[x+1][y].equals(Tileset.FLOOR)));
     }
 
     public TETile[][] getWorld() {
