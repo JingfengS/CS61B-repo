@@ -2,15 +2,18 @@ package byog.world;
 
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import byog.interactivity.Player;
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class World {
+public class World implements Serializable {
     private final long SEED;
     private TETile[][] world;
     private final int WIDTH;
     private final int HEIGHT;
+    private Player player;
 
     public World(long seed, int width, int height) {
         WIDTH = width;
@@ -35,6 +38,7 @@ public class World {
             DoorY = StdRandom.uniform(1, HEIGHT - 1);
         }
         world[DoorX][DoorY] = Tileset.LOCKED_DOOR;
+        player = new Player(world);
     }
 
     private static boolean wallNextToFloor(int x, int y, TETile[][] world) {
@@ -47,5 +51,8 @@ public class World {
 
     public TETile[][] getWorld() {
         return world;
+    }
+    public Player getPlayer() {
+        return player;
     }
 }

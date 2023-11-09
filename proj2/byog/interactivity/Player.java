@@ -5,6 +5,8 @@ import byog.TileEngine.Tileset;
 import byog.helpers.BlockHelper;
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.io.Serializable;
+
 public class Player extends AbstractCreature {
     public Player(TETile[][] wor) {
         world = wor;

@@ -2,7 +2,9 @@ package byog.interactivity;
 
 import byog.TileEngine.TETile;
 
-public interface Creature {
+import java.io.Serializable;
+
+public interface Creature extends Serializable {
     /**
      * Initialize the Creature in the world
      * @return the world after mutation
