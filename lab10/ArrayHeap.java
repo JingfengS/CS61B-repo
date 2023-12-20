@@ -1,5 +1,6 @@
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * A Generic heap class. Unlike Java's priority queue, this heap doesn't just
@@ -190,6 +191,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public T removeMin() {
         T minPriorityItem = getNode(rootIndex).myItem;
+        if (size() == 1) {
+            size -= 1;
+            return minPriorityItem;
+        }
         swap(rootIndex, size);
         deleteFinalNode();
         sink(rootIndex);
@@ -212,7 +217,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * @param priority
      */
     private int temporaryChangePriority(T item, double priority) {
-        for (int i = 0; i < contents.length; i += 1) {
+        for (int i = 1; i < contents.length; i += 1) {
             if (getNode(i).myItem.equals(item)) {
                 getNode(i).myPriority = priority;
                 return i;
@@ -458,8 +463,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         pq.insert("d", 4);
 
         int i = 0;
-        String[] expected = {"a", "b", "c", "c", "d", "d", "e", "g", "h", "i"};
-        while (pq.size() > 1) {
+        String[] expected = {"a", "b", "c", "c", "d", "d", "e", "g", "h", "i", "g"};
+        while (pq.size() >= 1) {
             assertEquals(expected[i], pq.removeMin());
             i += 1;
         }
