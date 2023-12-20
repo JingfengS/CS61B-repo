@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private Node[] contents;
     private int size;
+    private static final int rootIndex = 1;
 
     public ArrayHeap() {
         contents = new ArrayHeap.Node[16];
@@ -34,7 +35,6 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * Returns the index of the node to the right of the node at i.
      */
     private static int rightIndex(int i) {
-        /* TODO: Your code here! */
         return 2 * i + 1;
     }
 
@@ -42,8 +42,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * Returns the index of the node that is the parent of the node at i.
      */
     private static int parentIndex(int i) {
-        /* TODO: Your code here! */
-        return 0;
+        return i / 2;
     }
 
     /**
@@ -55,6 +54,26 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             return null;
         }
         return contents[index];
+    }
+
+    /**
+     * Add a node at the end of the complete tree
+     * This method is used to build up abstraction
+     * @param item
+     * @param priority
+     */
+    private void addNode(T item, double priority) {
+        Node newNode = new Node(item, priority);
+        size += 1;
+        contents[size] = newNode;
+    }
+
+    /**
+     * Delete the final node of the complete tree
+     * This method is also used to build up abstraction
+     */
+    private void deleteFinalNode() {
+        size -= 1;
     }
 
     /**
@@ -106,8 +125,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        /** TODO: Your code here. */
-        return;
+        Node parentNode = getNode(parentIndex(index));
+        Node currentNode = getNode(index);
+        if (parentNode == null) {
+            return;
+        }
+        if (currentNode.myPriority >= parentNode.myPriority) {
+            return;
+        }
+        swap(index, parentIndex(index));
+        swim(parentIndex(index));
     }
 
     /**
@@ -116,9 +143,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
-        /** TODO: Your code here. */
-        return;
+        Node currentNode = getNode(index);
+        if (getNode(leftIndex(index)) == null) {
+            return;
+        }
+        int smallerIndex = min(leftIndex(index), rightIndex(index));
+        if (currentNode.myPriority <= getNode(smallerIndex).myPriority) {
+            return;
+        }
+        swap(index, smallerIndex);
+        sink(smallerIndex);
     }
 
     /**
@@ -131,8 +165,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size + 1 == contents.length) {
             resize(contents.length * 2);
         }
-
-        /* TODO: Your code here! */
+        addNode(item, priority);
+        swim(size);
     }
 
     /**
@@ -141,8 +175,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        /* TODO: Your code here! */
-        return null;
+        return getNode(rootIndex).myItem;
     }
 
     /**
@@ -156,8 +189,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        /* TODO: Your code here! */
-        return null;
+        T minPriorityItem = getNode(rootIndex).myItem;
+        swap(rootIndex, size);
+        deleteFinalNode();
+        sink(rootIndex);
+        return minPriorityItem;
     }
 
     /**
@@ -171,6 +207,21 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     }
 
     /**
+     * Helper method for changePriority
+     * @param item
+     * @param priority
+     */
+    private int temporaryChangePriority(T item, double priority) {
+        for (int i = 0; i < contents.length; i += 1) {
+            if (getNode(i).myItem.equals(item)) {
+                getNode(i).myPriority = priority;
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("No such node has the very item!");
+    }
+
+    /**
      * Change the node in this heap with the given item to have the given
      * priority. You can assume the heap will not have two nodes with the same
      * item. Check item equality with .equals(), not ==. This is a challenging
@@ -179,8 +230,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public void changePriority(T item, double priority) {
-        /* TODO: Your code here! */
-        return;
+        int targetIndex = temporaryChangePriority(item, priority);
+        sink(targetIndex);
+        swim(targetIndex);
     }
 
     /**
