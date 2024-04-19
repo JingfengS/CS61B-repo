@@ -2,7 +2,10 @@ package hw4.puzzle;
 
 import edu.princeton.cs.algs4.MinPQ;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Solver {
     private class SearchNode implements Comparable<SearchNode> {
@@ -40,8 +43,9 @@ public class Solver {
     }
 
     private MinPQ<SearchNode> pq;
-    private Deque<SearchNode> solution;
+    private Deque<WorldState> solution;
     private HashMap<WorldState, Integer> cashingEstimatedDistance;
+    private int steps;
 
     /**
      * Constructor which solves the puzzle, computing
@@ -61,19 +65,18 @@ public class Solver {
 
     private void solve() {
         SearchNode current = pq.delMin();
-        if (current.word.isGoal()) {
-            while (current != null) {
-                solution.addFirst(current);
-                current = current.parent;
+        while (!current.word.isGoal()) {
+            for (SearchNode neighbor : current.neighbors()) {
+                cashingEstimatedDistance.put(neighbor.word, neighbor.priority - neighbor.steps);
+                pq.insert(neighbor);
             }
-            return;
+            current = pq.delMin();
         }
-
-        for (SearchNode neighbor : current.neighbors()) {
-            cashingEstimatedDistance.put(neighbor.word, neighbor.priority - neighbor.steps);
-            pq.insert(neighbor);
+        steps = current.steps;
+        while (current != null) {
+            solution.addFirst(current.word);
+            current = current.parent;
         }
-        solve();
     }
 
     /**
@@ -82,7 +85,7 @@ public class Solver {
      * @return the minimum number of moves to solve the puzzle
      */
     public int moves() {
-        return solution.getLast().steps;
+        return steps;
     }
 
     /**
@@ -91,10 +94,6 @@ public class Solver {
      * @return a sequence of WorldStates from the initial WorldState
      */
     public Iterable<WorldState> solution() {
-        ArrayDeque<WorldState> wordSolution = new ArrayDeque<>();
-        while (!solution.isEmpty()) {
-            wordSolution.addLast(solution.removeFirst().word);
-        }
-        return wordSolution;
+        return solution;
     }
 }
