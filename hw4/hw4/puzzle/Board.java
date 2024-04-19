@@ -130,25 +130,47 @@ public class Board implements WorldState {
      * @param y other board
      * @return true if they are equal, false otherwise
      */
+//    @Override
+//    public boolean equals(Object y) {
+//        if (this == y) {
+//            return true;
+//        }
+//        if (y instanceof Board otherBoard) {
+//            if (otherBoard.size() != size()) {
+//                return false;
+//            }
+//            for (int i = 0; i < size(); i++) {
+//                for (int j = 0; j < size(); j++) {
+//                    if (tileAt(i, j) != otherBoard.tileAt(i, j)) {
+//                        return false;
+//                    }
+//                }
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
+
     @Override
-    public boolean equals(Object y) {
-        if (this == y) {
+    public boolean equals(Object other) {
+        if (this == other) {
             return true;
         }
-        if (y instanceof Board otherBoard) {
-            if (otherBoard.size() != size()) {
-                return false;
-            }
-            for (int i = 0; i < size(); i++) {
-                for (int j = 0; j < size(); j++) {
-                    if (tileAt(i, j) != otherBoard.tileAt(i, j)) {
-                        return false;
-                    }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Board board1 = (Board) other;
+        if (size() != board1.size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i += 1) {
+            for (int j = 0; j < size(); j += 1) {
+                if (tileAt(i, j) != board1.tileAt(i, j)) {
+                    return false;
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
 
