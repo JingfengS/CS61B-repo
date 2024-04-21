@@ -1,7 +1,5 @@
 package hw3.hash;
 
-import edu.princeton.cs.algs4.In;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
