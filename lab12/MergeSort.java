@@ -87,77 +87,77 @@ public class MergeSort {
        return singleItemQueues.peek();
     }
 
-//    @Test
-//    public void testMakeSingleItemQueues() {
-//        Queue<Integer> q = new Queue<>();
-//
-//        assertThat(makeSingleItemQueues(q)).isEmpty();
-//
-//        q.enqueue(2);
-//        assertThat(makeSingleItemQueues(q).peek().peek()).isEqualTo(2);
-//
-//        q.enqueue(1);
-//        q.enqueue(3);
-//        Queue<Queue<Integer>> result = makeSingleItemQueues(q);
-//
-//        assertThat(result.dequeue().peek()).isEqualTo(2);
-//        assertThat(result.dequeue().peek()).isEqualTo(1);
-//        assertThat(result.dequeue().peek()).isEqualTo(3);
-//        assertThat(result).isEmpty();
-//    }
-//
-//    @Test
-//    public void testMergeSortedQueues() {
-//        Queue<Integer> q1 = new Queue<>();
-//        Queue<Integer> q2 = new Queue<>();
-//        q1.enqueue(1);
-//
-//        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1);
-//        q1.enqueue(1);
-//        assertThat(mergeSortedQueues(q2, q1)).containsExactly(1);
-//
-//        q1.enqueue(1);
-//        q2.enqueue(2);
-//        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1, 2).inOrder();
-//        q1.enqueue(1);
-//        q1.enqueue(3);
-//        q2.enqueue(2);
-//        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1, 2, 3).inOrder();
-//        q1.enqueue(1);
-//        q1.enqueue(3);
-//        q2.enqueue(2);
-//        q2.enqueue(4);
-//        q2.enqueue(5);
-//        q1.enqueue(3);
-//        q1.enqueue(3);
-//        q1.enqueue(8);
-//        assertThat(mergeSortedQueues(q2, q1)).containsExactly(1, 2, 3, 3, 3, 4, 5, 8).inOrder();
-//    }
-//
-//    @Test
-//    public void testMergeSort() {
-//        Queue<Integer> q1 = new Queue<>();
-//        Queue<String> students = new Queue<>();
-//        Queue<Integer> q2 = new Queue<>();
-//
-//        assertThat(mergeSort(q1)).isEmpty();
-//        q1.enqueue(1);
-//        assertThat(mergeSort(q1)).containsExactly(1);
-//        q1.enqueue(0);
-//        assertThat(mergeSort(q1)).containsExactly(0, 1).inOrder();
-//        students.enqueue("Alice");
-//        students.enqueue("Vanessa");
-//        students.enqueue("Ethan");
-//        assertThat(mergeSort(students)).containsExactly("Alice", "Ethan", "Vanessa").inOrder();
-//
-//        q2.enqueue(5);
-//        q2.enqueue(9);
-//        q2.enqueue(17);
-//        q2.enqueue(88);
-//        q2.enqueue(42);
-//        q2.enqueue(3);
-//        q2.enqueue(32);
-//
-//        assertThat(mergeSort(q2)).containsExactly(3, 5, 9, 17, 32, 42, 88).inOrder();
-//    }
+    @Test
+    public void testMakeSingleItemQueues() {
+        Queue<Integer> q = new Queue<>();
+
+        assertThat(makeSingleItemQueues(q)).isEmpty();
+
+        q.enqueue(2);
+        assertThat(makeSingleItemQueues(q).peek().peek()).isEqualTo(2);
+
+        q.enqueue(1);
+        q.enqueue(3);
+        Queue<Queue<Integer>> result = makeSingleItemQueues(q);
+
+        assertThat(result.dequeue().peek()).isEqualTo(2);
+        assertThat(result.dequeue().peek()).isEqualTo(1);
+        assertThat(result.dequeue().peek()).isEqualTo(3);
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void testMergeSortedQueues() {
+        Queue<Integer> q1 = new Queue<>();
+        Queue<Integer> q2 = new Queue<>();
+        q1.enqueue(1);
+
+        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1);
+        q1.enqueue(1);
+        assertThat(mergeSortedQueues(q2, q1)).containsExactly(1);
+
+        q1.enqueue(1);
+        q2.enqueue(2);
+        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1, 2).inOrder();
+        q1.enqueue(1);
+        q1.enqueue(3);
+        q2.enqueue(2);
+        assertThat(mergeSortedQueues(q1, q2)).containsExactly(1, 2, 3).inOrder();
+        q1.enqueue(1);
+        q1.enqueue(3);
+        q2.enqueue(2);
+        q2.enqueue(4);
+        q2.enqueue(5);
+        q1.enqueue(3);
+        q1.enqueue(3);
+        q1.enqueue(8);
+        assertThat(mergeSortedQueues(q2, q1)).containsExactly(1, 2, 3, 3, 3, 4, 5, 8).inOrder();
+    }
+
+    @Test
+    public void testMergeSort() {
+        Queue<Integer> q1 = new Queue<>();
+        Queue<String> students = new Queue<>();
+        Queue<Integer> q2 = new Queue<>();
+
+        assertThat(mergeSort(q1)).isEmpty();
+        q1.enqueue(1);
+        assertThat(mergeSort(q1)).containsExactly(1);
+        q1.enqueue(0);
+        assertThat(mergeSort(q1)).containsExactly(0, 1).inOrder();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        assertThat(mergeSort(students)).containsExactly("Alice", "Ethan", "Vanessa").inOrder();
+
+        q2.enqueue(5);
+        q2.enqueue(9);
+        q2.enqueue(17);
+        q2.enqueue(88);
+        q2.enqueue(42);
+        q2.enqueue(3);
+        q2.enqueue(32);
+
+        assertThat(mergeSort(q2)).containsExactly(3, 5, 9, 17, 32, 42, 88).inOrder();
+    }
 }
