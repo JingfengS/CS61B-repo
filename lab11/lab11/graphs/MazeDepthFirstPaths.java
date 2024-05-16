@@ -9,10 +9,11 @@ public class MazeDepthFirstPaths extends MazeExplorer {
     public int[] edgeTo;
     public boolean[] marked;
     */
-    private int s;
-    private int t;
+    private final int s;
+    private final int t;
     private boolean targetFound = false;
-    private Maze maze;
+
+    private static final  boolean showDistance = false;
 
 
     public MazeDepthFirstPaths(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
@@ -20,7 +21,9 @@ public class MazeDepthFirstPaths extends MazeExplorer {
         maze = m;
         s = maze.xyTo1D(sourceX, sourceY);
         t = maze.xyTo1D(targetX, targetY);
-        distTo[s] = 0;
+        if (showDistance) {
+            distTo[s] = 0;
+        }
         edgeTo[s] = s;
     }
 
@@ -39,8 +42,10 @@ public class MazeDepthFirstPaths extends MazeExplorer {
         for (int w : maze.adj(v)) {
             if (!marked[w]) {
                 edgeTo[w] = v;
+                if (showDistance) {
+                    distTo[w] = distTo[v] + 1;
+                }
                 announce();
-                distTo[w] = distTo[v] + 1;
                 dfs(w);
                 if (targetFound) {
                     return;
