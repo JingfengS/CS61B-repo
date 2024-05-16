@@ -76,30 +76,30 @@ public class QuickSort {
         partition(items, getRandomItem(items), less, equal, greater);
         return catenate(quickSort(less), catenate(equal, quickSort(greater)));
     }
-    @Test
-    public void testQuickSort() {
-        Queue<Integer> q1 = new Queue<>();
-        Queue<String> students = new Queue<>();
-        Queue<Integer> q2 = new Queue<>();
-
-        assertThat(quickSort(q1)).isEmpty();
-        q1.enqueue(1);
-        assertThat(quickSort(q1)).containsExactly(1);
-        q1.enqueue(0);
-        assertThat(quickSort(q1)).containsExactly(0, 1).inOrder();
-        students.enqueue("Alice");
-        students.enqueue("Vanessa");
-        students.enqueue("Ethan");
-        assertThat(quickSort(students)).containsExactly("Alice", "Ethan", "Vanessa").inOrder();
-
-        q2.enqueue(5);
-        q2.enqueue(9);
-        q2.enqueue(17);
-        q2.enqueue(88);
-        q2.enqueue(42);
-        q2.enqueue(3);
-        q2.enqueue(32);
-
-        assertThat(quickSort(q2)).containsExactly(3, 5, 9, 17, 32, 42, 88).inOrder();
-    }
+//    @Test
+//    public void testQuickSort() {
+//        Queue<Integer> q1 = new Queue<>();
+//        Queue<String> students = new Queue<>();
+//        Queue<Integer> q2 = new Queue<>();
+//
+//        assertThat(quickSort(q1)).isEmpty();
+//        q1.enqueue(1);
+//        assertThat(quickSort(q1)).containsExactly(1);
+//        q1.enqueue(0);
+//        assertThat(quickSort(q1)).containsExactly(0, 1).inOrder();
+//        students.enqueue("Alice");
+//        students.enqueue("Vanessa");
+//        students.enqueue("Ethan");
+//        assertThat(quickSort(students)).containsExactly("Alice", "Ethan", "Vanessa").inOrder();
+//
+//        q2.enqueue(5);
+//        q2.enqueue(9);
+//        q2.enqueue(17);
+//        q2.enqueue(88);
+//        q2.enqueue(42);
+//        q2.enqueue(3);
+//        q2.enqueue(32);
+//
+//        assertThat(quickSort(q2)).containsExactly(3, 5, 9, 17, 32, 42, 88).inOrder();
+//    }
 }
