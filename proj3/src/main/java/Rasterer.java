@@ -10,7 +10,6 @@ import java.util.Map;
 public class Rasterer {
 
     public Rasterer() {
-        // YOUR CODE HERE
     }
 
     /**
@@ -42,11 +41,33 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+        double ullat = params.get("ullat");
+        double lrlat = params.get("lrlat");
+        double ullon = params.get("ullon");
+        double lrlon = params.get("lrlon");
+        double w = params.get("w");
+        if (lrlat > ullat || lrlon < ullon) {
+            results.put("query_success", false);
+            return results;
+        }
+        int depth = RastererHelper.getDepth(ullon, lrlon, w);
+        int ulboxX = RastererHelper.getBoxXX(ullon, depth);
+        int ulboxY = RastererHelper.getBoxYY(ullat, depth);
+        int lrboxX = RastererHelper.getBoxXX(lrlon, depth);
+        int lrBoxY = RastererHelper.getBoxYY(lrlat, depth);
+        String[][] render_grid = RastererHelper.createImageMatrix(ulboxX, ulboxY, lrboxX, lrBoxY, depth);
+        double raster_ul_lon = RastererHelper.getBoundingULLON(ulboxX, depth);
+        double raster_ul_lat = RastererHelper.getBoundingULLAT(ulboxY, depth);
+        double raster_lr_lon = RastererHelper.getBoundingLRLON(lrboxX, depth);
+        double raster_lr_lat = RastererHelper.getBoundingLRLAT(lrBoxY, depth);
+        results.put("render_grid", render_grid);
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("depth", depth);
+        results.put("query_success", true);
         return results;
     }
-
 }
