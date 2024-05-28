@@ -86,6 +86,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             currentWay.addNode(Long.parseLong(attributes.getValue("ref")));
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
+
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");

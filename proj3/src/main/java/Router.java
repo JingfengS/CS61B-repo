@@ -1,5 +1,7 @@
-import java.util.List;
-import java.util.Objects;
+import org.checkerframework.checker.units.qual.A;
+
+import javax.sound.midi.MidiSystem;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,24 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+    private static final long SENTINEL = -1;
+    public static class AStarNode implements Comparable<AStarNode> {
+        private long id;
+        private double estimatedDistanceTo;
+        public AStarNode(long id, double estimatedDistanceTo) {
+            this.id = id;
+            this.estimatedDistanceTo = estimatedDistanceTo;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        @Override
+        public int compareTo(AStarNode o) {
+            return Double.compare(this.estimatedDistanceTo, o.estimatedDistanceTo);
+        }
+    }
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,7 +45,42 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long start = g.closest(stlon, stlat);
+        long destination = g.closest(destlon, destlat);
+        Set<Long> marked = new HashSet<>();
+        Map<Long, Double> bestDistFromStart = new HashMap<>();
+        Map<Long, Long> edgeTo = new HashMap<>();
+        PriorityQueue<AStarNode> fringe = new PriorityQueue<>();
+        fringe.add(new AStarNode(start, g.distance(start, destination)));
+        bestDistFromStart.put(start, 0.);
+        edgeTo.put(start, SENTINEL);
+        while (!fringe.isEmpty()) {
+            long v = fringe.remove().getId();
+            marked.add(v);
+            if (v == destination) {
+                List<Long> shortestPath = new ArrayList<>();
+                for (long vertex = v; vertex != -1; vertex = edgeTo.get(vertex)) {
+                    shortestPath.add(vertex);
+                }
+                Collections.reverse(shortestPath);
+                return shortestPath;
+            }
+            for (long neighbor : g.adjacent(v)) {
+                if (marked.contains(neighbor)) {
+                    continue;
+                }
+                if (!bestDistFromStart.containsKey(neighbor)) {
+                    bestDistFromStart.put(neighbor, Double.POSITIVE_INFINITY);
+                }
+                double currentDistance = bestDistFromStart.get(v) + g.distance(v, neighbor);
+                if (currentDistance < bestDistFromStart.get(neighbor)) {
+                    bestDistFromStart.put(neighbor, currentDistance);
+                    edgeTo.put(neighbor, v);
+                    fringe.add(new AStarNode(neighbor, currentDistance + g.distance(neighbor, destination)));
+                }
+            }
+        }
+        throw new RuntimeException("Unexpected no result!");
     }
 
     /**
