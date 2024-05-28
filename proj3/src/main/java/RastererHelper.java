@@ -15,6 +15,8 @@ public class RastererHelper {
 
     /** Each tile is 256x256 pixels. */
     public static final int TILE_SIZE = 256;
+
+    /** The LongDPP of depth 0 map. This will be used as a reference of depth calculation. */
     public static final double depthZeroDPP = (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE;
 
     /**
@@ -116,10 +118,26 @@ public class RastererHelper {
     }
 
 
+    /**
+     * Create a string represent the image from x, y and depth
+     * @param x the x position of the box
+     * @param y the y position of the box
+     * @param depth the depth of the map
+     * @return a string represent the box
+     */
     public static String xY2ImageString(int x, int y, int depth) {
         return "d" + depth + "_x" + x + "_y" + y + ".png";
     }
 
+    /**
+     * Create a string-image matrix to represent the whole map
+     * @param upperLeftX the upper left box X position in the map
+     * @param upperLeftY the upper left box Y position in the map
+     * @param lowerRightX the lower right box X position in the map
+     * @param lowerRightY the lower right box Y position in the map
+     * @param depth the depth of the map
+     * @return a string-image matrix to represent the whole map
+     */
     public static String[][] createImageMatrix(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, int depth) {
         String[][] imageMatrix = new String[lowerRightY - upperLeftY + 1][lowerRightX - upperLeftX + 1];
         for (int x = upperLeftX; x <= lowerRightX; x += 1) {

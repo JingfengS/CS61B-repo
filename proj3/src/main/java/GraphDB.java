@@ -6,18 +6,179 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
  * Uses your GraphBuildingHandler to convert the XML files into a graph. Your
- * code must include the vertices, adjacent, distance, closest, lat, and lon
- * methods. You'll also need to include instance variables and methods for
+ * code must include the vertices, adjacent, distance, closest, lat, and lon * methods. You'll also need to include instance variables and methods for
  * modifying the graph (e.g. addNode and addEdge).
  *
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
+    /**
+     * This is the underlying representation of the graph object.
+     */
+    private HashMap<Long, HashSet<Long>> graph;
+
+    /**
+     * This maps the Long id to Node to gain more information from the node id.
+     */
+    private HashMap<Long, Node> id2Node;
+
+    /**
+     * This maps the long id to Way to gain more information about the way
+     */
+    private HashMap<Long, Way> id2Way;
+
+    /**
+     * The Way abstract class to represent the whole information of the way
+     * @id the id of the way/road
+     * @nodes a list of linear nodes along the way
+     * @maxSpeed the speed limit of the way (Note that this information won't be uesd in this project)
+     * @name the name of the road/way
+     * @validFlag shows if the way is valid
+     */
+    public class Way {
+        private long id;
+        private List<Long> nodes;
+        private String maxSpeed;
+        private String name;
+        private  boolean validFlag = false;
+        public Way(long id, List<Long> nodes) {
+            this.id = id;
+            this.nodes = nodes;
+            name = "unknown road";
+            maxSpeed = "";
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public boolean containsNode(long nodeId) {
+            return nodes.contains(nodeId);
+        }
+
+        public void addNode(long nodeId) {
+            nodes.add(nodeId);
+        }
+
+        public List<Long> getNodes() {
+            return nodes;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+        public void setMaxSpeed(String speedLimit) {
+            maxSpeed = speedLimit;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getMaxSpeed() {
+            return maxSpeed;
+        }
+
+        public void setValidFlag(boolean validFlag) {
+            this.validFlag = validFlag;
+        }
+
+        public boolean isValid() {
+            return validFlag;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (other == null || other.getClass() != this.getClass()) {
+                return false;
+            }
+            Way node = (Way) other;
+            return node.id == id;
+        }
+
+        @Override
+        public int hashCode() {
+            return (int) id;
+        }
+    }
+
+    /**
+     * This is the representation of the node,
+     * it contains information about the
+     * @id id of the node
+     * @longitude longitude of the node
+     * @latittude latitude of the node
+     */
+    public class Node {
+        private long id;
+        private double lon;
+        private double lat;
+        private String name;
+        public Node(long id, double lon, double lat) {
+            this.id = id;
+            this.lon = lon;
+            this.lat = lat;
+            name = "";
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public double getLon() {
+            return lon;
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+        public void setName(String n) {
+            name = n;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (other == null || other.getClass() != this.getClass()) {
+                return false;
+            }
+            Node node = (Node) other;
+            return node.id == id;
+        }
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Node: ");
+            sb.append(name.toString());
+            sb.append(", id: ");
+            sb.append(id);
+            return sb.toString();
+        }
+
+        @Override
+        public int hashCode() {
+           return (int) id;
+        }
+    }
+
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
@@ -28,6 +189,10 @@ public class GraphDB {
      */
     public GraphDB(String dbPath) {
         try {
+            graph = new HashMap<>();
+            id2Way = new HashMap<>();
+            id2Node = new HashMap<>();
+
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
             // GZIPInputStream stream = new GZIPInputStream(inputStream);
@@ -57,7 +222,15 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        Set<Long> independentNode = new HashSet<>();
+        for (long id : vertices()) {
+            if (graph.get(id).isEmpty()) {
+                independentNode.add(id);
+            }
+        }
+        for (long id : independentNode) {
+            deleteVertex(id);
+        }
     }
 
     /**
@@ -65,8 +238,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return graph.keySet();
     }
 
     /**
@@ -75,7 +247,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return graph.get(v);
     }
 
     /**
@@ -129,6 +301,14 @@ public class GraphDB {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
+    private Node getNodeById(long id) {
+        return id2Node.get(id);
+    }
+
+    private Way getWayById(long id) {
+        return id2Way.get(id);
+    }
+
     /**
      * Returns the vertex closest to the given longitude and latitude.
      * @param lon The target longitude.
@@ -136,7 +316,17 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        double closestDistance = Double.POSITIVE_INFINITY;
+        long closestId = -1;
+        for (long id : vertices()) {
+            Node vertex = getNodeById(id);
+            double currentDistance = distance(lon, lat, vertex.getLon(), vertex.getLat());
+            if (currentDistance < closestDistance) {
+                closestDistance = currentDistance;
+                closestId = id;
+            }
+        }
+        return closestId;
     }
 
     /**
@@ -145,7 +335,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return getNodeById(v).lon;
     }
 
     /**
@@ -154,6 +344,48 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return getNodeById(v).lat;
+    }
+
+    public void addVertex(long id, double lon, double lat) {
+        if (graph.containsKey(id) || id2Node.containsKey(id)) {
+            throw new IllegalArgumentException("Vertex " + id + " has been added!");
+        }
+        graph.put(id, new HashSet<>());
+        id2Node.put(id, new Node(id, lon, lat));
+    }
+
+    public void addVertex(Node node) {
+        addVertex(node.id, node.lon, node.lat);
+    }
+
+    public void addEdge(long v, long w) {
+        if (!graph.containsKey(v) || !graph.containsKey(w)) {
+            throw new IllegalArgumentException("Vertex " + v + " or Vertex " + w + " haven't been added to the Vertex Set!");
+        }
+        graph.get(v).add(w);
+        graph.get(w).add(v);
+    }
+
+    public void deleteVertex(long id) {
+        if (!graph.containsKey(id) || !graph.get(id).isEmpty()) {
+            throw new IllegalArgumentException("The graph doesn't contain such a Vertex!");
+        }
+        graph.remove(id);
+        id2Node.remove(id);
+    }
+
+    public void addWay(Way way) {
+        if (!way.validFlag) {
+            throw new IllegalArgumentException("This way is not valid!");
+        }
+        long previousNode = -1;
+        for (long currentNode : way.getNodes()) {
+            if (previousNode != -1) {
+                addEdge(previousNode, currentNode);
+            }
+            previousNode = currentNode;
+        }
+        id2Way.put(way.getId(), way);
     }
 }
