@@ -36,6 +36,12 @@ public class GraphDB {
     private HashMap<Long, Way> id2Way;
 
     /**
+     * This is a map that contains every possible name in the whole berkeley map
+     * and map the name to its ids
+     * Note that a location with name may map to multi ids
+     */
+    private HashMap<String, HashSet<Long>> name2Id;
+    /**
      * The Way abstract class to represent the whole information of the way
      * @id the id of the way/road
      * @nodes a list of linear nodes along the way
@@ -125,11 +131,15 @@ public class GraphDB {
         private double lon;
         private double lat;
         private String name;
+
+        private Set<Long> waysLocated;
+
         public Node(long id, double lon, double lat) {
             this.id = id;
             this.lon = lon;
             this.lat = lat;
             name = "";
+            waysLocated = new HashSet<>();
         }
 
         public long getId() {
@@ -163,6 +173,11 @@ public class GraphDB {
             Node node = (Node) other;
             return node.id == id;
         }
+
+        public void addWay(long wayId) {
+            waysLocated.add(wayId);
+        }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -192,6 +207,7 @@ public class GraphDB {
             graph = new HashMap<>();
             id2Way = new HashMap<>();
             id2Node = new HashMap<>();
+            name2Id = new HashMap<>();
 
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
@@ -205,6 +221,7 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
+        setName2Id();
     }
 
     /**
@@ -214,6 +231,10 @@ public class GraphDB {
      */
     static String cleanString(String s) {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+    }
+
+    public Set<Long> getIdsByName(String name) {
+        return name2Id.get(name);
     }
 
     /**
@@ -301,9 +322,31 @@ public class GraphDB {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
+    private void setName2Id() {
+        for (long nodeId : vertices()) {
+            String name = getNodeById(nodeId).name;
+            if (!name.isEmpty()) {
+                if (!name2Id.containsKey(name)) {
+                    name2Id.put(name, new HashSet<>());
+                }
+                name2Id.get(name).add(nodeId);
+            }
+        }
+        for (long wayId : id2Way.keySet()) {
+            String name = getWayById(wayId).name;
+            if (!name.isEmpty()) {
+                if (!name2Id.containsKey(name)) {
+                    name2Id.put(name, new HashSet<>());
+                }
+                name2Id.get(name).add(wayId);
+            }
+        }
+    }
+
     private Node getNodeById(long id) {
         return id2Node.get(id);
     }
+
 
     private Way getWayById(long id) {
         return id2Way.get(id);
@@ -384,6 +427,7 @@ public class GraphDB {
             if (previousNode != -1) {
                 addEdge(previousNode, currentNode);
             }
+            getNodeById(currentNode).addWay(way.getId());
             previousNode = currentNode;
         }
         id2Way.put(way.getId(), way);
