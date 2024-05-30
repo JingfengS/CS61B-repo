@@ -58,7 +58,7 @@ public class GraphDB {
         public Way(long id, List<Long> nodes) {
             this.id = id;
             this.nodes = nodes;
-            name = "unknown road";
+            name = "";
             maxSpeed = "";
         }
 
@@ -176,6 +176,10 @@ public class GraphDB {
 
         public void addWay(long wayId) {
             waysLocated.add(wayId);
+        }
+
+        public Set<Long> getWaysLocated() {
+            return waysLocated;
         }
 
         @Override
@@ -343,12 +347,18 @@ public class GraphDB {
         }
     }
 
-    private Node getNodeById(long id) {
+    public Node getNodeById(long id) {
+        if (!id2Node.containsKey(id)) {
+            throw new IllegalArgumentException("The id is invalid!");
+        }
         return id2Node.get(id);
     }
 
 
-    private Way getWayById(long id) {
+    public Way getWayById(long id) {
+        if (!id2Way.containsKey(id)) {
+            throw new IllegalArgumentException("The id is invalid!");
+        }
         return id2Way.get(id);
     }
 
