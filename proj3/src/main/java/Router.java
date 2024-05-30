@@ -94,100 +94,36 @@ public class Router {
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         List<NavigationDirection> navigations = new ArrayList<>();
-        List<Long> routeCopy = new ArrayList<>(route);
-        int direction = NavigationDirection.START;
-        double distance = 0.;
-        double prevDistanceToAdd = 0.;
-        double nextDistanceToSubstract = 0.;
-        while (!routeCopy.isEmpty()) {
-            NavigationDirectionHelper ndh = endPointOfTheWay(g, routeCopy);
-            distance = ndh.distance;
-            nextDistanceToSubstract = ndh.tmpDistance;
-            navigations.add(new NavigationDirection(direction, ndh.way, prevDistanceToAdd + ndh.distance - nextDistanceToSubstract));
-            prevDistanceToAdd = nextDistanceToSubstract;
-            direction = ndh.nextNavigationDirection;
-        }
         return  navigations;
     }
 
-    /**
-     * Return the NavigationDirectionHelper of the way the start point and endPoint of the route is on
-     * Side Effect: the route will be mutated, must be a copy. (Remove the start node and end node along the route)
-     * @param g the graph to use
-     * @param route the route to translate into directions, note that this should be a
-     *              copy of the route since we are going to mutate it in the program
-     * @return the NavigationDirectionHelper the start point and endpoint is on
-     */
-    private static NavigationDirectionHelper endPointOfTheWay(GraphDB g, List<Long> route) {
-        long start = route.get(0);
-        long next = start;
-        long prev = start;
-        Set<Long> potencialWays = g.getNodeById(start).getWaysLocated();
-        boolean wayHaveDifferentIdButSameName = false;
-        long wayId = -1;
-        double distance = 0.;
-        double tmpDistance = 0.;
-        if (potencialWays.isEmpty()) {
-            throw new RuntimeException("Unknown why the node is not on anyway. A but in the code");
+    private static int direction(GraphDB g, double currentBearing, double previousBearing) {
+        double deltaBearing = currentBearing - previousBearing;
+         if (deltaBearing > 180) {
+            deltaBearing -= 360;
+        } else if (deltaBearing < -180) {
+            deltaBearing += 360;
         }
-        while (!potencialWays.isEmpty() || wayHaveDifferentIdButSameName) {
-            route.remove(0);
-            if (route.isEmpty()) {
-                break;
-            }
-            prev = next;
-            next = route.get(0);
-            distance += g.distance(prev, next);
-            potencialWays.retainAll(g.getNodeById(next).getWaysLocated());
-            if (potencialWays.size() == 1) {
-                for (long id : potencialWays) { // Get the id out of the set
-                    wayId = id;
-                }
-            }
-            if (potencialWays.isEmpty()) {
-                String nameOfThePotencialWay = g.getWayById(wayId).getName();
-                wayHaveDifferentIdButSameName = nodeOnTheWayHasCertainName(g, nameOfThePotencialWay, next);
-                if (!wayHaveDifferentIdButSameName) {
-                    tmpDistance += g.distance(prev, next);
-                }
-            }
-        }
-        return new NavigationDirectionHelper(direction(g, start, next), g.getWayById(wayId).getName(), distance, tmpDistance);
-    }
 
-    private static boolean nodeOnTheWayHasCertainName(GraphDB g, String name, long nodeId) {
-        if (name.isEmpty()) {
-            return false;
-        }
-        for (long wayId : g.getNodeById(nodeId).getWaysLocated()) {
-            if (name.equals(g.getWayById(wayId).getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static int direction(GraphDB g, long v, long w) {
-        double bearing = g.bearing(v, w);
-        if (bearing <= 15 && bearing >= -15) {
+        if (deltaBearing <= 15 && deltaBearing >= -15) {
             return NavigationDirection.STRAIGHT;
         }
-        if (bearing > 15 && bearing <= 30) {
+        if (deltaBearing > 15 && deltaBearing <= 30) {
             return NavigationDirection.SLIGHT_RIGHT;
         }
-        if (bearing < -15 && bearing >= -30) {
+        if (deltaBearing < -15 && deltaBearing >= -30) {
             return NavigationDirection.SLIGHT_LEFT;
         }
-        if (bearing > 30 && bearing <= 100) {
+        if (deltaBearing > 30 && deltaBearing <= 100) {
             return NavigationDirection.RIGHT;
         }
-        if (bearing < -30 && bearing >= -100) {
+        if (deltaBearing < -30 && deltaBearing >= -100) {
             return NavigationDirection.LEFT;
         }
-        if (bearing > 100) {
+        if (deltaBearing > 100) {
             return NavigationDirection.SHARP_RIGHT;
         }
-        if (bearing < -100) {
+        if (deltaBearing < -100) {
             return NavigationDirection.SHARP_LEFT;
         }
         return -1;
@@ -229,8 +165,9 @@ public class Router {
         /** A mapping of integer values to directions.*/
         public static final String[] DIRECTIONS = new String[NUM_DIRECTIONS];
 
-        /** Default name for an unknown way. */
-        public static final String UNKNOWN_ROAD = "unknown road";
+        /** Default name for an unknown way.
+         * TODO:*/
+        public static final String UNKNOWN_ROAD = "";
         
         /** Static initializer. */
         static {
