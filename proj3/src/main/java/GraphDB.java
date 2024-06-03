@@ -1,3 +1,4 @@
+import TrieSet.TrieSet;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -41,6 +42,17 @@ public class GraphDB {
      * Note that a location with name may map to multi ids
      */
     private HashMap<String, HashSet<Long>> name2Id;
+
+    /**
+     * This is a map from cleaned string to its real string
+     */
+    private HashMap<String, Set<String>> cleanString2String;
+
+    /**
+     * This is a trieset that contains all the location strings in clean form
+     * this is used by search
+     */
+    public TrieSet locationTrie;
     /**
      * The Way abstract class to represent the whole information of the way
      * @id the id of the way/road
@@ -212,6 +224,8 @@ public class GraphDB {
             id2Way = new HashMap<>();
             id2Node = new HashMap<>();
             name2Id = new HashMap<>();
+            cleanString2String = new HashMap<>();
+            locationTrie = new TrieSet();
 
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
@@ -226,6 +240,31 @@ public class GraphDB {
         }
         clean();
         setName2Id();
+        setCleanString2String();
+        setLocationTrie();
+    }
+
+    public Set<String> getNameByCleanedName(String cleaned) {
+        if (!cleanString2String.containsKey(cleaned)) {
+            throw new IllegalArgumentException("No such cleaned location name! A bug in the code");
+        }
+        return cleanString2String.get(cleaned);
+    }
+
+    private void setLocationTrie() {
+        for (String cleanedName : cleanString2String.keySet()) {
+            locationTrie.addWord(cleanedName);
+        }
+    }
+
+    private void setCleanString2String() {
+        for (String name : name2Id.keySet()) {
+            String cleanedName = cleanString(name);
+            if (!cleanString2String.containsKey(cleanedName)) {
+                cleanString2String.put(cleanedName, new HashSet<>());
+            }
+            cleanString2String.get(cleanedName).add(name);
+        }
     }
 
     /**
@@ -264,6 +303,10 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         return graph.keySet();
+    }
+
+    Iterable<Long> allVertices() {
+        return id2Node.keySet();
     }
 
     /**
@@ -327,7 +370,7 @@ public class GraphDB {
     }
 
     private void setName2Id() {
-        for (long nodeId : vertices()) {
+        for (long nodeId : allVertices()) {
             String name = getNodeById(nodeId).name;
             if (!name.isEmpty()) {
                 if (!name2Id.containsKey(name)) {
@@ -336,20 +379,11 @@ public class GraphDB {
                 name2Id.get(name).add(nodeId);
             }
         }
-        for (long wayId : id2Way.keySet()) {
-            String name = getWayById(wayId).name;
-            if (!name.isEmpty()) {
-                if (!name2Id.containsKey(name)) {
-                    name2Id.put(name, new HashSet<>());
-                }
-                name2Id.get(name).add(wayId);
-            }
-        }
     }
 
     public Node getNodeById(long id) {
         if (!id2Node.containsKey(id)) {
-            throw new IllegalArgumentException("The id is invalid!");
+            throw new IllegalArgumentException("The id: " + id + " is invalid!");
         }
         return id2Node.get(id);
     }
@@ -400,16 +434,13 @@ public class GraphDB {
         return getNodeById(v).lat;
     }
 
-    public void addVertex(long id, double lon, double lat) {
-        if (graph.containsKey(id) || id2Node.containsKey(id)) {
-            throw new IllegalArgumentException("Vertex " + id + " has been added!");
-        }
-        graph.put(id, new HashSet<>());
-        id2Node.put(id, new Node(id, lon, lat));
-    }
 
     public void addVertex(Node node) {
-        addVertex(node.id, node.lon, node.lat);
+        if (graph.containsKey(node.id) || id2Node.containsKey(node.id)) {
+            throw new IllegalArgumentException("Vertex " + node.id + " has been added!");
+        }
+        graph.put(node.id, new HashSet<>());
+        id2Node.put(node.id, node);
     }
 
     public void addEdge(long v, long w) {
@@ -425,7 +456,7 @@ public class GraphDB {
             throw new IllegalArgumentException("The graph doesn't contain such a Vertex!");
         }
         graph.remove(id);
-        id2Node.remove(id);
+        // Onlu delete disconnected component in the graph, but not in the id2Node section
     }
 
     public void addWay(Way way) {
