@@ -94,7 +94,53 @@ public class Router {
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         List<NavigationDirection> navigations = new ArrayList<>();
-        return  navigations;
+        if (route.isEmpty()) {
+            throw new IllegalArgumentException("Route cannot be empty!");
+        }
+        if (route.size() == 1) {
+            long node = route.get(0);
+            GraphDB.Way way = g.getWayById(g.getNodeById(node).getWaysLocated().stream().findFirst().get());
+            navigations.add(new NavigationDirection(NavigationDirection.START, way.getName(), 0.));
+            return navigations;
+        }
+        if (route.size() == 2) {
+            String wayName = getWayName(g, route.get(0), route.get(1));
+            navigations.add(new NavigationDirection(NavigationDirection.START, wayName, g.distance(route.get(0), route.get(1))));
+            return navigations;
+        }
+        double distance = 0.;
+        int preDirection = NavigationDirection.START;
+        for (int i = 1; i < route.size() - 1; i += 1) {
+            distance += g.distance(route.get(i - 1), route.get(i));
+            if (!getWayName(g, route.get(i - 1), route.get(i)).equals(getWayName(g, route.get(i), route.get(i + 1)))) {
+                String wayName = getWayName(g, route.get(i - 1), route.get(i));
+                double currentBearing = g.bearing(route.get(i), route.get(i + 1));
+                double previousBearing = g.bearing(route.get(i - 1),route.get(i));
+                navigations.add(new NavigationDirection(preDirection, wayName, distance));
+                preDirection = direction(g, currentBearing, previousBearing);
+                distance = 0.;
+            }
+        }
+        int index = route.size() - 2;
+        String wayName = getWayName(g, route.get(index), route.get(index + 1));
+        distance += g.distance(route.get(index), route.get(index + 1));
+        navigations.add(new NavigationDirection(preDirection, wayName, distance));
+        return navigations;
+    }
+
+    public static String getWayName(GraphDB g, long node1, long node2) {
+        Set<Long> intersection = new HashSet<>(g.getNodeById(node1).getWaysLocated());
+        intersection.retainAll(g.getNodeById(node2).getWaysLocated());
+        if (intersection.isEmpty()) {
+            throw new IllegalArgumentException("node1 and node2 have no intersection!");
+        }
+        for (long way : intersection) {
+            String name = g.getWayById(way).getName();
+            if (!name.isEmpty()) {
+                return name;
+            }
+        }
+        return "";
     }
 
     private static int direction(GraphDB g, double currentBearing, double previousBearing) {
@@ -129,18 +175,6 @@ public class Router {
         return -1;
     }
 
-    private static class NavigationDirectionHelper {
-        int nextNavigationDirection;
-        String way;
-        double distance;
-        double tmpDistance;
-        public NavigationDirectionHelper(int d, String w, double dist, double t) {
-            nextNavigationDirection = d;
-            way = w;
-            distance = dist;
-            tmpDistance = t;
-        }
-    }
 
 
     /**
@@ -167,7 +201,7 @@ public class Router {
 
         /** Default name for an unknown way.
          * TODO:*/
-        public static final String UNKNOWN_ROAD = "";
+        public static final String UNKNOWN_ROAD = "unknown road";
         
         /** Static initializer. */
         static {
