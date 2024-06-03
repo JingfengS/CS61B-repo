@@ -2,14 +2,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.image.ImageProducer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -285,7 +281,12 @@ public class MapServer {
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        List<String> cleanedResults = graph.locationTrie.contains(GraphDB.cleanString(prefix));
+        List<String> results = new ArrayList<>();
+        for (String cleanedName : cleanedResults) {
+            results.addAll(graph.getNameByCleanedName(cleanedName));
+        }
+        return results;
     }
 
     /**
@@ -301,7 +302,22 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Map<String, Object>> response = new ArrayList<>();
+        String cleanedName = GraphDB.cleanString(locationName);
+        Set<String> namesMatchCleanedName = graph.getNameByCleanedName(cleanedName);
+        for (String name : namesMatchCleanedName) {
+            Set<Long> nodeIds = graph.getIdsByName(name);
+            for (long id : nodeIds) {
+                Map<String, Object> mapjson = new HashMap<>();
+                GraphDB.Node node = graph.getNodeById(id);
+                mapjson.put("lat", node.getLat());
+                mapjson.put("lon", node.getLon());
+                mapjson.put("name", node.getName());
+                mapjson.put("id", node.getId());
+                response.add(mapjson);
+            }
+        }
+        return response;
     }
 
     /**
