@@ -26,14 +26,30 @@ public class TrieSet {
 
     Node root;
 
+    public TrieSet() {
+        root = new Node();
+    }
+
+
     /**
      * Return a list of strings that contains the prefix string
      * @param prefix
      * @return a list of strings that contains the prefix string
      */
     public List<String> contains(String prefix) {
-       return null;
+        Node r = root;
+        List<String> wordsWithExactPrefix = new ArrayList<>();
+        for (int i = 0; i < prefix.length(); i += 1) {
+            if (!r.map.containsKey(prefix.charAt(i))) {
+                return wordsWithExactPrefix;
+            }
+            r = r.map.get(prefix.charAt(i));
+        }
+        StringBuilder sb = new StringBuilder(prefix);
+        collectHelper(sb, r, wordsWithExactPrefix);
+        return wordsWithExactPrefix;
     }
+
 
     private Node addChar(char c, boolean isKey, Node root) {
         if (root.map.containsKey(c)) {
@@ -79,7 +95,8 @@ public class TrieSet {
             return;
         }
         for (char nextChar : root.map.keySet()) {
-            collectHelper(sb.append(nextChar), root.map.get(nextChar), wordList);
+            StringBuilder newSb = new StringBuilder(sb);
+            collectHelper(newSb.append(nextChar), root.map.get(nextChar), wordList);
         }
     }
 }

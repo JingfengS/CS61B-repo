@@ -18,6 +18,7 @@ public class TestGraphBuilding {
             "../library-sp18/data/berkeley-2018-small.osm.xml";
     private static boolean initialized = false;
 
+
     /**
      * Initializes the student graphs.
      * You should not need to modify this code. If you do, then the Autograder
