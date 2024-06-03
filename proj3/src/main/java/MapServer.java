@@ -13,7 +13,6 @@ import java.io.IOException;
 
 /* Maven is used to pull in these dependencies. */
 import com.google.gson.Gson;
-import org.eclipse.jetty.io.EndPoint;
 
 import static spark.Spark.*;
 
