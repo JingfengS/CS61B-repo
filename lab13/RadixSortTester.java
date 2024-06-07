@@ -8,7 +8,7 @@ public class RadixSortTester {
         String[] unsorted = {"dat", "cat", "dog", "bat", "hat", "cak", "dig", "dad"};
         String[] sorted = {"bat", "cak", "cat", "dad", "dat", "dig", "dog", "hat"};
 
-        String[] result = RadixSort.sort(unsorted);
+        String[] result = RadixSort.sortLSD(unsorted);
         assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();
     }
 
@@ -17,7 +17,7 @@ public class RadixSortTester {
         String[] unsorted = {"cat", "bat", "dog", "hat", "apple", "bear", "pear", "app"};
         String[] sorted = {"app", "apple", "bat", "bear", "cat", "dog", "hat", "pear"};
 
-        String[] result = RadixSort.sort(unsorted);
+        String[] result = RadixSort.sortLSD(unsorted);
         assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();
     }
     @Test
