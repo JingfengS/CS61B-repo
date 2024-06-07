@@ -1,9 +1,3 @@
-import edu.princeton.cs.algs4.MinPQ;
-import net.sf.saxon.expr.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
