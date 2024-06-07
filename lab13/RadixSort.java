@@ -16,7 +16,7 @@ public class RadixSort {
      *
      * @return String[] the sorted array
      */
-    public static String[] sort(String[] asciis) {
+    public static String[] sortLSD(String[] asciis) {
         String[] arrayToSort = new String[asciis.length];
         for (int i = 0; i < asciis.length; i += 1) {
             arrayToSort[i] = asciis[i];
@@ -77,7 +77,7 @@ public class RadixSort {
     }
 
 
-    public static String[] sortMSD(String[] asciis) {
+    public static String[] sort(String[] asciis) {
         String[] arrayToSort = new String[asciis.length];
         for (int i = 0; i < asciis.length; i += 1) {
             arrayToSort[i] = asciis[i];
