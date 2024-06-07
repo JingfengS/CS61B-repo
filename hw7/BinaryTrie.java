@@ -19,7 +19,7 @@ public class BinaryTrie implements Serializable {
         TrieNode getChild(int child);
     }
 
-    private class Branch implements TrieNode, Comparable<TrieNode> {
+    private class Branch implements TrieNode, Comparable<TrieNode>, Serializable {
         int frequency;
         TrieNode child[];
         public Branch(TrieNode leftChild, TrieNode rightChild) {
@@ -63,7 +63,7 @@ public class BinaryTrie implements Serializable {
         }
     }
 
-    private class Leaf implements TrieNode, Comparable<TrieNode> {
+    private class Leaf implements TrieNode, Comparable<TrieNode>, Serializable {
         int frequency;
         char value;
 
