@@ -5,10 +5,10 @@ public class RadixSortTester {
 
     @Test
     public void testOfSameLength() {
-        String[] unsorted = {"cat", "dog", "bat", "hat"};
-        String[] sorted = {"bat", "cat", "dog", "hat"};
+        String[] unsorted = {"dat", "cat", "dog", "bat", "hat", "cak", "dig", "dad"};
+        String[] sorted = {"bat", "cak", "cat", "dad", "dat", "dig", "dog", "hat"};
 
-        String[] result = RadixSort.sort(unsorted);
+        String[] result = RadixSort.sortLSD(unsorted);
         assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();
     }
 
@@ -17,7 +17,7 @@ public class RadixSortTester {
         String[] unsorted = {"cat", "bat", "dog", "hat", "apple", "bear", "pear", "app"};
         String[] sorted = {"app", "apple", "bat", "bear", "cat", "dog", "hat", "pear"};
 
-        String[] result = RadixSort.sort(unsorted);
+        String[] result = RadixSort.sortLSD(unsorted);
         assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();
     }
     @Test
@@ -33,6 +33,15 @@ public class RadixSortTester {
     public void testRadixSortMSD() {
         String[] unsorted = {"cat", "bat", "dog", "hat", "apple", "bear", "pear", "app"};
         String[] sorted = {"app", "apple", "bat", "bear", "cat", "dog", "hat", "pear"};
+
+        String[] result = RadixSort.sortMSD(unsorted);
+        assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();
+    }
+
+    @Test
+    public void externalTest() {
+        String[] unsorted = {"#=","E","#"};
+        String[] sorted = {"#", "#=", "E"};
 
         String[] result = RadixSort.sortMSD(unsorted);
         assertThat(result).asList().containsExactlyElementsIn(sorted).inOrder();

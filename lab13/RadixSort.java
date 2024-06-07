@@ -16,7 +16,7 @@ public class RadixSort {
      *
      * @return String[] the sorted array
      */
-    public static String[] sort(String[] asciis) {
+    public static String[] sortLSD(String[] asciis) {
         String[] arrayToSort = new String[asciis.length];
         for (int i = 0; i < asciis.length; i += 1) {
             arrayToSort[i] = asciis[i];
@@ -64,14 +64,14 @@ public class RadixSort {
     private static char getCharAtIndexLSD(String s, int index, int maxLength) {
         int indexLSD = maxLength - index - 1;
         if (indexLSD >= s.length()) {
-            return '_';
+            return 0;
         }
         return s.charAt(indexLSD);
     }
 
     private static char getCharAtIndexMSD(String s, int index) {
         if (s.length() <= index) {
-            return '_';
+            return 0;
         }
         return s.charAt(index);
     }
