@@ -1,3 +1,9 @@
+import edu.princeton.cs.algs4.MinPQ;
+import net.sf.saxon.expr.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
@@ -14,47 +20,7 @@ public class CountingSort {
      * @return the sorted array
      */
     public static int[] naiveCountingSort(int[] arr) {
-        // find max
-        int max = Integer.MIN_VALUE;
-        for (int i : arr) {
-            max = max > i ? max : i;
-        }
-
-        // gather all the counts for each value
-        int[] counts = new int[max + 1];
-        for (int i : arr) {
-            counts[i]++;
-        }
-
-        // when we're dealing with ints, we can just put each value
-        // count number of times into the new array
-        int[] sorted = new int[arr.length];
-        int k = 0;
-        for (int i = 0; i < counts.length; i += 1) {
-            for (int j = 0; j < counts[i]; j += 1, k += 1) {
-                sorted[k] = i;
-            }
-        }
-
-        // however, below is a more proper, generalized implementation of
-        // counting sort that uses start position calculation
-        int[] starts = new int[max + 1];
-        int pos = 0;
-        for (int i = 0; i < starts.length; i += 1) {
-            starts[i] = pos;
-            pos += counts[i];
-        }
-
-        int[] sorted2 = new int[arr.length];
-        for (int i = 0; i < arr.length; i += 1) {
-            int item = arr[i];
-            int place = starts[item];
-            sorted2[place] = item;
-            starts[item] += 1;
-        }
-
-        // return the sorted array
-        return sorted;
+        return countingSortHelper(arr, 0);
     }
 
     /**
@@ -66,7 +32,41 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (int i : arr) {
+            max = Math.max(max, i);
+            min = Math.min(min, i);
+        }
+        int compliment = Math.abs(min);
+        for (int i = 0; i < arr.length; i += 1) {
+            arr[i] += compliment;
+        }
+        return countingSortHelper(arr, compliment);
+    }
+
+    private static int[] countingSortHelper(int [] arr, int compliment) {
+        int max = Integer.MIN_VALUE;
+        for (int i : arr) {
+            max = Math.max(max, i);
+        }
+        int[] count = new int[max + 1];
+        int[] start = new int[max + 1];
+        for (int place : arr) {
+            count[place] += 1;
+        }
+
+        int pos = 0;
+        for (int i = 0; i < count.length; i += 1) {
+            start[i] = pos;
+            pos += count[i];
+        }
+        int[] sorted = new int[arr.length];
+        for (int item : arr) {
+            int position = start[item];
+            sorted[position] = item - compliment;
+            start[item] += 1;
+        }
+        return sorted;
     }
 }
